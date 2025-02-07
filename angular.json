@@ -52,7 +52,9 @@
               }
             ],
             "styles": ["src/styles.css"],
-            "scripts": []
+            "scripts": [],
+            "baseHref": "/angularDeploy/",
+            "deployUrl": "/angularDeploy/"
           },
           "configurations": {
             "production": {
@@ -69,7 +71,8 @@
                 }
               ],
               "outputHashing": "all",
-              "baseHref": "/angularDeploy/"
+              "baseHref": "/angularDeploy/",
+              "deployUrl": "/angularDeploy/"
             },
             "development": {
               "optimization": false,
