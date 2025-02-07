@@ -1,0 +1,104 @@
+<main class="container">
+  <h1>⏱️ Task Timer</h1>
+
+  <!-- Task Creation Form -->
+  <section class="form-container">
+    <form (submit)="onSubmit()">
+      <div class="form-group">
+        <div>
+          <label for="taskName">Task Name:</label>
+          <input
+            id="taskName"
+            type="text"
+            [(ngModel)]="newTaskName"
+            name="taskName"
+            placeholder="Enter task name"
+            required
+          />
+        </div>
+
+        <div>
+          <label for="taskDuration">Duration (minutes):</label>
+          <input
+            id="taskDuration"
+            type="number"
+            [(ngModel)]="newTaskDuration"
+            name="taskDuration"
+            min="1"
+            placeholder="Enter duration"
+            required
+          />
+        </div>
+
+        <button [disabled]="newTaskName.trim() === ''" type="submit">
+          <i class="fas fa-plus"></i> Add Task
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <!-- Task List -->
+  <section class="tasks-container">
+    <h2 class="visually-hidden">Task List</h2>
+
+    <div *ngIf="tasks.length === 0" class="no-tasks">
+      <i class="fas fa-clipboard-list"></i>
+      <p>No tasks added yet</p>
+    </div>
+
+    <div
+      *ngFor="let task of tasks; let i = index"
+      class="task-item"
+      [ngClass]="{
+        'task-complete': task.isComplete,
+        'task-active': task.isActive,
+        'task-paused': !task.isActive && !task.isComplete
+      }"
+    >
+      <div class="task-info">
+        <h3>{{ task.name }}</h3>
+        <p class="duration">
+          <i class="far fa-clock"></i> Duration: {{ task.duration }} minutes
+        </p>
+        <p class="timer">
+          {{ formatTime(task.timeRemaining) }}
+        </p>
+
+        <div class="task-status">
+          <span *ngIf="task.isComplete">
+            <i class="fas fa-check-circle"></i> Task Complete!
+          </span>
+          <span *ngIf="task.isActive">
+            <i class="fas fa-play-circle"></i> Timer Running
+          </span>
+          <span *ngIf="!task.isActive && !task.isComplete">
+            <i class="fas fa-pause-circle"></i> Timer Paused
+          </span>
+        </div>
+      </div>
+
+      <div class="task-controls">
+        <button (click)="toggleTimer(task)" [disabled]="task.isComplete">
+          <i [class]="task.isActive ? 'fas fa-pause' : 'fas fa-play'"></i>
+          {{ task.isActive ? "Pause" : "Start" }}
+        </button>
+
+        <button (click)="completeTask(task)" [disabled]="task.isComplete">
+          <i class="fas fa-check"></i> Complete
+        </button>
+
+        <button (click)="deleteTask(i)" class="delete-btn">
+          <i class="fas fa-trash"></i> Delete
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Total Time Counter -->
+  <footer class="total-time" *ngIf="tasks.length > 0">
+    <p>
+      <i class="fas fa-hourglass-half"></i>
+      Total Time Spent: {{ getTotalTimeSpent() }}
+    </p>
+  </footer>
+</main>
